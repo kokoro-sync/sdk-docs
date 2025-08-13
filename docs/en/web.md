@@ -10,9 +10,9 @@ Before loading the H5 game page and before calling any H5SDK API, include and lo
 
 For example, reference in the main file index.html of your H5 game:
 
-~~~
+```html
 <script src="https://oss.bytesdk.com/h5/xsdk.js"></script>
-~~~
+```
 
 Required APIs
 -------
@@ -21,7 +21,7 @@ Required APIs
 
 Initialization should be called after the game interface is rendered or after game resources are loaded. You can also set callbacks for logout and account switch success.
 
-```
+```js
 window.XSDKApi.init(function(data) {
     // Perform other operations after the initialization callback
     console.log('sdk init success:', data)
@@ -36,7 +36,7 @@ window.XSDKApi.init(function(data) {
 
 #### Login API (Required)
 
-```
+```js
 window.XSDKApi.login(function(loginResult) {
     console.log('login result called:', loginResult)
     /**
@@ -53,13 +53,13 @@ window.XSDKApi.login(function(loginResult) {
 
 #### Logout API (Optional)
 
-```
+```js
 window.XSDKApi.logout()
 ```
 
 #### Submit Extended Data (Required)
 
-```
+```js
 var roleData = {
     serverID: '1',
     serverName: 'H5 Demo Server',
@@ -111,7 +111,7 @@ roleData structure:
 
 #### Payment (Required)
 
-```
+```js
 var productPrice = 100           // Item price (in cents)
 var cpOrderID = parseInt("" + new Date().getTime() / 1000)          // Game's own order number
 var cpPayNotifyUrl = "http://172.16.0.109:12201/game/pay/callback"  // Server notification URL after payment
@@ -162,15 +162,15 @@ OrderData structure:
 
 1. Show User Center (Optional)
 
-~~~
+```js
 window.XSDKApi.showUserCenter()
-~~~
+```
 
 2. Set Listener
 
-~~~
+```js
 window.XSDKApi.setLogoutCallback(function() {
     // When this callback is received in-game, return the player to the login screen and call the login API again for re-login
     console.log('logout from sdk. in game_test.html')
 });
-~~~
+```

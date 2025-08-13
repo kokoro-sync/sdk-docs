@@ -11,9 +11,9 @@ NOTE:这篇文档，介绍H5游戏中怎么调用H5 SDK的API。 主要包含初
 
 比如在H5游戏的主文件index.html中引用：
 
-~~~
+```html
 <script src="https://oss.bytesdk.com/h5/xsdk.js"></script>
-~~~
+```
 
 
 必须调用的接口
@@ -23,7 +23,7 @@ NOTE:这篇文档，介绍H5游戏中怎么调用H5 SDK的API。 主要包含初
 
 初始化应该在游戏界面渲染完成后调用或者在游戏加载资源完成后调用。 并且可以设置登出和切换账号成功回调。
 
-```
+```js
 window.XSDKApi.init(function(data) {
     // 需要在初始化回调后， 进行其他操作
     console.log('sdk init success:', data)
@@ -34,13 +34,11 @@ window.XSDKApi.init(function(data) {
         console.log('logout from sdk. in game_test.html')
     });    
 });
-
 ```
 
 #### 登录接口(必接)
 
-```
-
+```js
 window.XSDKApi.login(function(loginResult) {
     console.log('login result called:', loginResult)
 
@@ -59,13 +57,13 @@ window.XSDKApi.login(function(loginResult) {
 
 #### 登出接口(选接)
 
-```
+```js
 window.XSDKApi.logout()
 ```
 
 #### 提交扩展数据(必接)
 
-```
+```js
 var roleData = {
     serverID: '1',
     serverName: 'H5演示服务器',
@@ -125,7 +123,7 @@ window.XSDKApi.submit(roleData, function(result) {
 
 #### 支付充值(必接)
 
-```
+```js
 var productPrice = 100           //当前道具金额（单位分）
 var cpOrderID = parseInt("" + new Date().getTime() / 1000)          // 游戏自己的订单号
 var cpPayNotifyUrl = "http://172.16.0.109:12201/game/pay/callback"  // 支付完成后， 游戏服务器接收SDK服务器回调通知地址
@@ -183,7 +181,7 @@ window.XSDKApi.pay(orderData, function(result){
 
 如果游戏内需要主动展示用户中心，可以调用如下接口
 
-~~~
+~~~js
 window.XSDKApi.showUserCenter()
 ~~~
 
@@ -192,7 +190,7 @@ window.XSDKApi.showUserCenter()
 
 当玩家在SDK内登出时，SDK将触发一个登出回调给游戏层，游戏层收到该回调后，应该引导玩家返回到游戏登录界面，重新登录。 可以在初始化完成后设置
 
-~~~
+~~~js
 window.XSDKApi.setLogoutCallback(function() {
     // 注意：游戏内收到这个回调后， 需要让玩家返回到游戏登录界面，重新掉login接口 ，让玩家重新登录
     console.log('logout from sdk. in game_test.html')

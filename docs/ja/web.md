@@ -10,9 +10,9 @@ H5ゲームのページがロードされる前、またはH5SDK APIを呼び出
 
 例：H5ゲームのメインファイルindex.htmlで参照する場合
 
-~~~
+```html
 <script src="https://oss.bytesdk.com/h5/xsdk.js"></script>
-~~~
+```
 
 必須API
 -------
@@ -21,7 +21,7 @@ H5ゲームのページがロードされる前、またはH5SDK APIを呼び出
 
 初期化はゲーム画面の描画完了後、またはゲームのリソースロード完了後に呼び出してください。ログアウトやアカウント切替成功時のコールバックも設定できます。
 
-```
+```js
 window.XSDKApi.init(function(data) {
     // 初期化コールバック後に他の処理を行う
     console.log('sdk init success:', data)
@@ -36,7 +36,7 @@ window.XSDKApi.init(function(data) {
 
 #### ログインAPI（必須）
 
-```
+```js
 window.XSDKApi.login(function(loginResult) {
     console.log('login result called:', loginResult)
     /**
@@ -53,13 +53,13 @@ window.XSDKApi.login(function(loginResult) {
 
 #### ログアウトAPI（任意）
 
-```
+```js
 window.XSDKApi.logout()
 ```
 
 #### 拡張データ送信（必須）
 
-```
+```js
 var roleData = {
     serverID: '1',
     serverName: 'H5デモサーバー',
@@ -111,7 +111,7 @@ roleData構造：
 
 #### 支払い（必須）
 
-```
+```js
 var productPrice = 100           //アイテム価格（単位：分）
 var cpOrderID = parseInt("" + new Date().getTime() / 1000)          // ゲーム独自の注文番号
 var cpPayNotifyUrl = "http://172.16.0.109:12201/game/pay/callback"  // 支払い完了後のサーバー通知URL
@@ -162,15 +162,15 @@ OrderData構造：
 
 1、ユーザーセンター表示（任意）
 
-~~~
+```js
 window.XSDKApi.showUserCenter()
-~~~
+```
 
 2、リスナー設定
 
-~~~
+```js
 window.XSDKApi.setLogoutCallback(function() {
     // ゲーム内でこのコールバックを受け取ったら、ログイン画面に戻し、login APIを再度呼び出して再ログインさせてください
     console.log('logout from sdk. in game_test.html')
 });
-~~~
+```
