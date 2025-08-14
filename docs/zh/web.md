@@ -1,15 +1,30 @@
-H5接入指南
+接入指南
 ======
 
-NOTE:这篇文档，介绍H5游戏中怎么调用H5 SDK的API。 主要包含初始化、登录、支付等接口
+NOTE:这篇文档，介绍游戏中怎么调用SDK的API。 主要包含初始化、登录、支付等接口
+
+
+## 架构
+```mermaid
+graph
+	subgraph A["平台页面"]
+		subgraph D["游戏内容(iframe)"]
+			E["SDK"]
+		end
+	end
+```
+
+- **平台页面**: 加载游戏的容器。负责渲染登录、支付等UI界面。
+- **游戏内容**: 在 `iframe` 中运行的游戏本体。
+- **SDK (`xsdk.js`)**: 游戏直接交互的SDK文件。没有UI，专注于使用API与平台页面进行通信。
 
 
 引用依赖
 -------
 
-在H5游戏的页面加载之前和H5SDK API调用之前，就引用并加载H5SDK的JS文件: xsdk.js。 请直接引用xsdk.js的完整URL地址（不要将js文件下载到本地）。 js文件完整的URL地址，请联系商务获取。
+在游戏的页面加载之前和SDK API调用之前，就引用并加载SDK的JS文件: xsdk.js。 请直接引用xsdk.js的完整URL地址（不要将js文件下载到本地）。 js文件完整的URL地址，请联系商务获取。
 
-比如在H5游戏的主文件index.html中引用：
+比如在游戏的主文件index.html中引用：
 
 ```html
 <script src="https://oss.bytesdk.com/h5/xsdk.js"></script>

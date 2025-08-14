@@ -1,15 +1,30 @@
-H5 Integration Guide
+Web Integration Guide
 ======
 
-NOTE: This document describes how to call the H5 SDK API in H5 games. It mainly includes interfaces for initialization, login, and payment.
+NOTE: This document describes how to call the SDK API in web games. It mainly includes interfaces for initialization, login, and payment.
+
+
+## Architecture
+```mermaid
+graph
+	subgraph A["Platform Page"]
+		subgraph D["Game Content (iframe)"]
+			E["SDK"]
+		end
+	end
+```
+
+- **Platform Page**: The container that loads the game. It is responsible for rendering UI such as login and payment screens.
+- **Game Content**: The main body of the game that runs in an `iframe`.
+- **SDK (`xsdk.js`)**: The SDK file that the game interacts with directly. It has no UI and is dedicated to communicating with the platform page using APIs.
 
 
 Include Dependencies
 -------
 
-Before the H5 game page loads and before any H5 SDK API calls are made, include and load the H5 SDK's JS file: xsdk.js. Please reference the full URL of xsdk.js directly (do not download the JS file locally). For the complete URL of the JS file, please contact your business representative.
+Before the game page loads and before any SDK API calls are made, include and load the SDK's JS file: xsdk.js. Please reference the full URL of xsdk.js directly (do not download the JS file locally). For the complete URL of the JS file, please contact your business representative.
 
-For example, in the main file of the H5 game, `index.html`:
+For example, in the main file of the game, `index.html`:
 
 ```html
 <script src="https://oss.bytesdk.com/h5/xsdk.js"></script>
