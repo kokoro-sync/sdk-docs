@@ -207,7 +207,6 @@ When the player logs out within the SDK, the SDK will trigger a logout callback 
 
 ```js
 window.XSDKApi.setLogoutCallback(function() {
-  // Note: After receiving this callback in the game, you need to return the player to the game login screen and call the login interface again to have the player log in again.
   console.log('logout from sdk. in game_test.html')
 });
 ```

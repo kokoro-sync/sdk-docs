@@ -207,7 +207,6 @@ window.XSDKApi.showUserCenter()
 
 ```js
 window.XSDKApi.setLogoutCallback(function() {
-  // 注意：游戏内收到这个回调后， 需要让玩家返回到游戏登录界面，重新掉login接口 ，让玩家重新登录
   console.log('logout from sdk. in game_test.html')
 });
 ```

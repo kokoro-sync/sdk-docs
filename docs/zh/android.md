@@ -1,38 +1,31 @@
-Android接入指南
+Android SDK接入指南
 ======
-
-NOTE:这篇文档，介绍游戏中怎么快速完成SDK Android平台的接入
-
 
 接入准备
 -------
 
+**1. 文件说明**
 
-**1、文件说明**
-
-~~~
+```
 SDKDemo/sdk-demo: SDK Demo工程
         ----libs: SDK所有相关的依赖jar和aar
-~~~
+```
 
-**2、添加依赖**
-
+**2. 添加依赖**
 
 2.1 添加依赖库
 
 将SDK相关的依赖库，拷贝到游戏工程目录下
 
-~~~
-将SDKDemo/sdk-core/libs下所有文件，拷贝到游戏工程的libs（依赖jar包,aar等目录存放位置）
-复制 main/assets/ug_dev.properties 文件到工程相同的目录下
-~~~
+- 将`SDKDemo/sdk-core/libs`下所有文件，拷贝到游戏工程的libs（依赖jar包,aar等目录存放位置）
+- 复制`main/assets/ug_dev.properties`文件到工程相同的目录下
 
 同时，在游戏工程的build.gradle中，添加如下依赖库：
 
-~~~
+```gradle
 //noinspection GradleCompatible
 implementation 'com.android.support:support-fragment:28.0.0'
-~~~
+```
 
 2.3 配置AndroidManifest.xml
 
@@ -48,7 +41,7 @@ implementation 'com.android.support:support-fragment:28.0.0'
 
 因为SDK库已经经过混淆， 所以如果游戏工程开启了混淆， 请在混淆配置文件中加入如下规则，忽略SDK中的api:
 
-~~~
+```
 -keep class com.game.sdk.** { *; }
 -keep class com.tencent.** { *; }
 -keep class com.qq.gdt.** { *; }
@@ -60,17 +53,20 @@ implementation 'com.android.support:support-fragment:28.0.0'
 -keep class org.repackage.** {*;}
 -keep class com.uyumao.** { *; }
 -keepclassmembers class * {
-   public <init> (org.json.JSONObject);
+	public <init> (org.json.JSONObject);
 }
 -keepclassmembers enum * {
-    public static **[] values();
-    public static ** valueOf(java.lang.String);
+	public static **[] values();
+	public static ** valueOf(java.lang.String);
 }
-~~~
+```
 SDK需要引用导入工程的资源文件，通过了反射机制得到资源引用文件R.java，但是在开发者通过proguard等混淆/优化工具处理apk时，proguard可能会将R.java删除，如果遇到这个问题，请添加如下配置：
+
+```
 -keep public class [您的应用包名].R$*{
-public static final int *;
+	public static final int *;
 }
+```
 
 配置Application
 -------
@@ -90,21 +86,20 @@ NOTE:所有接口调用，都通过com.game.sdk.XPlatform 单例类来调用
 **该方法必须在游戏启动Activity的onCreate方法中，调用**
 
 ```java
-String appID = "";                                  // TODO: 设置为SDK后台分配的appID参数
-String appKey = "1111111";                          // TODO: 设置为SDK后台分配的appKey参数
+String appID = ""; // TODO: 设置为SDK后台分配的appID参数
+String appKey = "1111111"; // TODO: 设置为SDK后台分配的appKey参数
 int orientation = UInitParams.ORIENTATION_PORTRAIT; //TODO: 设置为游戏横竖屏
 
 XPlatform.getInstance().init(this, new UInitParams(appID, appKey, orientation), new IInitListener() {
-    @Override
-    public void onInitFailed(int code, String msg) {
-        Log.e("UGSDKDemo", "sdk init failed. code:"+code+";msg:"+msg);
-    }
+  @Override
+  public void onInitFailed(int code, String msg) {
+    Log.e("UGSDKDemo", "sdk init failed. code:" + code + ";msg:" + msg);
+  }
 
-    @Override
-    public void onInitSuccess() {
-        Log.d("UGSDKDemo", "sdk init success");
-    }
-
+  @Override
+  public void onInitSuccess() {
+    Log.d("UGSDKDemo", "sdk init success");
+  }
 });
 ```
 
@@ -114,16 +109,16 @@ XPlatform.getInstance().init(this, new UInitParams(appID, appKey, orientation), 
 
 ```java
 XPlatform.getInstance().login(this, new ILoginListener() {
-    @Override
-    public void onLoginSuccess(UUser user) {
-        Log.d("UGSDKDemo", "sdk login success."+user.getUid());
-        // TODO: 游戏层将uid, token等发给游戏服务器， 游戏服务器再去SDK服务器端做登陆验证。 具体见服务端文档中登陆认证部分。
-    }
+  @Override
+  public void onLoginSuccess(UUser user) {
+    Log.d("UGSDKDemo", "sdk login success." + user.getUid());
+    // TODO: 游戏层将uid, token等发给游戏服务器， 游戏服务器再去SDK服务器端做登陆验证。 具体见服务端文档中登陆认证部分。
+  }
 
-    @Override
-    public void onLoginFailed(int code, String msg) {
-        Toast.makeText(MainActivity.this, "登陆失败:"+msg, Toast.LENGTH_LONG).show();
-    }
+  @Override
+  public void onLoginFailed(int code, String msg) {
+    Toast.makeText(MainActivity.this, "登陆失败:" + msg, Toast.LENGTH_LONG).show();
+  }
 });
 ```
 
@@ -148,10 +143,10 @@ data.setRoleID("1");
 data.setRoleName("test_role_1");
 data.setRoleLevel("1");
 data.setVip("1");
-data.setCreateTime(System.currentTimeMillis()/1000);
+data.setCreateTime(System.currentTimeMillis() / 1000);
 data.setLastLevelUpTime(data.getCreateTime());
 
-XPlatform.getInstance().submit(this, data); 
+XPlatform.getInstance().submit(this, data);
 ```
 
 该方法将调用的时机分为几种类型：
@@ -161,13 +156,11 @@ XPlatform.getInstance().submit(this, data);
 3. 等级提升
 4. 退出游戏
 
-所以在上面4个地方，都需要调用
-XPlatform.getInstance().submit(URoleData data)
+所以在上面4个地方，都需要调用`XPlatform.getInstance().submit(URoleData data)`
 
-其中，URoleData就是游戏内玩家的数据，结构中的参数不允许空值，如果没有值，请传入默认值0。 不同的调用时机，用URoleData.dataType来区分。 创建角色的时候，dataType为1；进入游戏时，dataType为2；等级提升时，dataType为3；退出游戏时，dataType为4
+其中，`URoleData`就是游戏内玩家的数据，结构中的参数不允许空值，如果没有值，请传入默认值0。 不同的调用时机，用`URoleData.dataType`来区分。 创建角色的时候，dataType为1；进入游戏时，dataType为2；等级提升时，dataType为3；退出游戏时，dataType为4
 
 关于UserExtraData 数据结构:
-
 
 | 参数名称        | 参数类型          | 参数说明  |
 |:------------- |:-------------|:-----|
@@ -201,23 +194,17 @@ order.setServerID("2");
 order.setServerName("test_1");
 order.setPrice(64800);          //金额单位：分
 order.setCurrency("CNY");
-order.setCpOrderID(System.currentTimeMillis()+"");
+order.setCpOrderID(System.currentTimeMillis() + "");
 order.setExtra("extra data");
 XPlatform.getInstance().pay(this, order, new IPayListener() {
-    @Override
-    public void onPaySuccess(UOrder order) {
+  @Override
+  public void onPaySuccess(UOrder order) {}
 
-    }
+  @Override
+  public void onPayFailed(UOrder order, String msg) {}
 
-    @Override
-    public void onPayFailed(UOrder order, String msg) {
-
-    }
-
-    @Override
-    public void onPayCanceled(UOrder order) {
-
-    }
+  @Override
+  public void onPayCanceled(UOrder order) {}
 });
 ```
 
@@ -240,156 +227,142 @@ XPlatform.getInstance().pay(this, order, new IPayListener() {
 | payNotifyUrl| String | 游戏服务器支付回调地址，SDK支付成功，异步通知该地址，让游戏服务器给玩家发货|
 | extra | String | 自定义数据， 支付回调通知给游戏服务器时，原封不动返回该值|
 
-
-
 7 生命周期函数(必接)
 -------
 
 在游戏主Activity的如下生命周期函数中，调用对应的方法。
 
 ```java
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        XPlatform.getInstance().onActivityResult(this, requestCode, resultCode, data);
-    }
+public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	super.onActivityResult(requestCode, resultCode, data);
+	XPlatform.getInstance().onActivityResult(this, requestCode, resultCode, data);
+}
 
+public void onStart() {
+	super.onStart();
+	XPlatform.getInstance().onStart(this);
+}
 
+public void onPause() {
+	super.onPause();
+	XPlatform.getInstance().onPause(this);
+}
 
-    public void onStart() {
-        super.onStart();
-        XPlatform.getInstance().onStart(this);
-    }
+public void onResume() {
+	super.onResume();
+	XPlatform.getInstance().onResume(this);
+}
 
+public void onNewIntent(Intent newIntent) {
+	super.onNewIntent(newIntent);
+	XPlatform.getInstance().onNewIntent(this, newIntent);
+}
 
-    public void onPause() {
-        super.onPause();
-        XPlatform.getInstance().onPause(this);
-    }
+public void onStop() {
+	super.onStop();
+	XPlatform.getInstance().onStop(this);
+}
 
+public void onDestroy() {
+	super.onDestroy();
+	XPlatform.getInstance().onDestroy(this);
+}
 
-    public void onResume() {
-        super.onResume();
-        XPlatform.getInstance().onResume(this);
-    }
+public void onRestart() {
+	super.onRestart();
+	XPlatform.getInstance().onRestart(this);
+}
 
+public void onBackPressed() {
+	super.onBackPressed();
+	XPlatform.getInstance().onBackPressed(this);
+}
 
-    public void onNewIntent(Intent newIntent) {
-        super.onNewIntent(newIntent);
-        XPlatform.getInstance().onNewIntent(this, newIntent);
-    }
+public void onConfigurationChanged(Configuration newConfig) {
+	super.onConfigurationChanged(newConfig);
+	XPlatform.getInstance().onConfigurationChanged(this, newConfig);
+}
 
+public void attachBaseContext(Context newBase) {
+	super.attachBaseContext(newBase);
+	XPlatform.getInstance().attachBaseContext(this, newBase);
+}
 
-    public void onStop() {
-        super.onStop();
-        XPlatform.getInstance().onStop(this);
-    }
-
-
-    public void onDestroy() {
-        super.onDestroy();
-        XPlatform.getInstance().onDestroy(this);
-    }
-
-
-    public void onRestart() {
-        super.onRestart();
-        XPlatform.getInstance().onRestart(this);
-    }
-
-
-    public void onBackPressed() {
-        super.onBackPressed();
-        XPlatform.getInstance().onBackPressed(this);
-    }
-
-
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        XPlatform.getInstance().onConfigurationChanged(this, newConfig);
-    }
-
-
-    public void attachBaseContext(Context newBase) {
-        super.attachBaseContext(newBase);
-        XPlatform.getInstance().attachBaseContext(this, newBase);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        XPlatform.getInstance().onRequestPermissionResult(this, requestCode, permissions, grantResults);
-
-    }
+@Override
+public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+	super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+	XPlatform.getInstance().onRequestPermissionResult(this, requestCode, permissions, grantResults);
+}
 ```
-
 
 8 用户 Logout 事件监听(选接)
 ```java
-// 监听 logout 事件(当用户点击 切换账号 按钮回调)
 XPlatform.getInstance().setLogoutListener(new ILogoutListener() {
-    @Override
-    public void onLogout() {
-        //TODO: 游戏层这里需要让玩家返回到游戏登陆界面，重新登陆
-        Log.d("UGSDKDemo", "sdk logout. game to logout");
-        // 可选
-        // 如果游戏没有自己的登录页面, 当用户点击 切换账号 之后可以调用 login() 方法展示登录弹框
-        // 在 logout 事件中, 重新调用登录方法展示登录弹框
-//        XPlatform.getInstance().login(MainActivity.this, new ILoginListener() {
-//            @Override
-//            public void onLoginSuccess(UUser user) {
-//                Log.d("UGSDKDemo", "sdk login success." + user.getUid());
-//                // TODO: 游戏层将uid, token等发给游戏服务器， 游戏服务器再去SDK服务器端做登陆验证。 具体见服务端文档中登陆认证部分。
-//            }
-//
-//            @Override
-//            public void onLoginFailed(int code, String msg) {
-//                Toast.makeText(MainActivity.this, "登陆失败:" + msg, Toast.LENGTH_LONG).show();
-//            }
-//        });
-    }
+  @Override
+  public void onLogout() {
+    //TODO: 游戏层这里需要让玩家返回到游戏登陆界面，重新登陆
+    Log.d("UGSDKDemo", "sdk logout. game to logout");
+  }
+});
+```
+
+如果游戏没有自己的登录页面, 当用户点击 切换账号 之后可以调用 login() 方法展示登录弹框(可选)
+```java
+XPlatform.getInstance().setLogoutListener(new ILogoutListener() {
+  @Override
+  public void onLogout() {
+    XPlatform.getInstance().login(MainActivity.this, new ILoginListener() {
+      @Override
+      public void onLoginSuccess(UUser user) {
+        Log.d("UGSDKDemo", "sdk login success." + user.getUid());
+        // TODO: 游戏层将uid, token等发给游戏服务器， 游戏服务器再去SDK服务器端做登陆验证。 具体见服务端文档中登陆认证部分。
+      }
+
+      @Override
+      public void onLoginFailed(int code, String msg) {
+        Toast.makeText(MainActivity.this, "登陆失败:" + msg, Toast.LENGTH_LONG).show();
+      }
+    });
+  }
 });
 ```
 
 9 结合 onResume() 生命周期方法监听用户登录状态 (选接)
+
+用户回到游戏的时候检测用户是否已经登录, 没有登录的情况下可以调用 登录 接口
 ```java
 public void onResume() {
-    super.onResume();
-    XPlatform.getInstance().onResume(this);
-    // 可选
-    // 用户回到游戏的时候检测用户是否已经登录, 没有登录的情况下可以调用 登录 接口
-    if (XPlatform.getInstance().isUserLogin()) {
-        Log.d("UGSDKDemo", "The user has logged in.");
-    } else {
-        // 用户未登录
-        Log.d("UGSDKDemo", "The user has not logged in yet.");
-        // ⚠️ 注意 ⚠️
-        // 调用登录接口之前, 一定要保证 SDK 已经完成了初始化
-        // 检测当前 SDK 是否已经完成初始化
-        if (XPlatform.getInstance().isSDKInitialized()) {
-            XPlatform.getInstance().login(this, new ILoginListener() {
-                @Override
-                public void onLoginSuccess(UUser user) {
-                    Log.d("UGSDKDemo", "sdk login success." + user.getUid());
-                }
-
-                @Override
-                public void onLoginFailed(int code, String msg) {
-                    Toast.makeText(MainActivity.this, "登陆失败:" + msg, Toast.LENGTH_LONG).show();
-                }
-            });
+  super.onResume();
+  XPlatform.getInstance().onResume(this);
+  if (XPlatform.getInstance().isUserLogin()) {
+    Log.d("UGSDKDemo", "The user has logged in.");
+  } else {
+    Log.d("UGSDKDemo", "The user has not logged in yet.");
+    // ⚠️ 注意 ⚠️
+    // 调用登录接口之前, 一定要保证 SDK 已经完成了初始化
+    // 检测当前 SDK 是否已经完成初始化
+    if (XPlatform.getInstance().isSDKInitialized()) {
+      XPlatform.getInstance().login(this, new ILoginListener() {
+        @Override
+        public void onLoginSuccess(UUser user) {
+          Log.d("UGSDKDemo", "sdk login success." + user.getUid());
         }
+
+        @Override
+        public void onLoginFailed(int code, String msg) {
+          Toast.makeText(MainActivity.this, "登陆失败:" + msg, Toast.LENGTH_LONG).show();
+        }
+      });
     }
+  }
 }
 ```
 
 10 检测当前用户登录状态
 ```java
 if (XPlatform.getInstance().isUserLogin()) {
-    // 用户已登录
-    Toast.makeText(this, "用户已经登录", Toast.LENGTH_SHORT).show();
+  Toast.makeText(this, "用户已经登录", Toast.LENGTH_SHORT).show();
 } else {
-    Toast.makeText(this, "用户还未登录", Toast.LENGTH_SHORT).show();
+  Toast.makeText(this, "用户还未登录", Toast.LENGTH_SHORT).show();
 }
 ```
-
-
