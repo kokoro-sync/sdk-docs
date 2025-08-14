@@ -26,7 +26,7 @@ Open build settings, configure Other Linker Flags, and add `-ObjC` (case-sensiti
 
 Merge the following info.plist configuration items into your game project's info.plist:
 
-```plist
+```xml
 <key>UIUserInterfaceStyle</key>
 <string>Light</string>
 <key>NSAppTransportSecurity</key>

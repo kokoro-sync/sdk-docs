@@ -26,7 +26,7 @@ build settingを開き、Other Linker Flagsを設定し、`-ObjC`を追加しま
 
 以下のinfo.plist設定項目をゲームプロジェクトのinfo.plistにマージします。
 
-```plist
+```xml
 <key>UIUserInterfaceStyle</key>
 <string>Light</string>
 <key>NSAppTransportSecurity</key>

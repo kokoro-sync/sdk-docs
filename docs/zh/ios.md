@@ -31,7 +31,7 @@ libc++abi.tbd
 
 将如下info plist 配置项合并到游戏工程的info plist中：
 
-```plist
+```xml
   <key>UIUserInterfaceStyle</key>
   <string>Light</string>
   <key>NSAppTransportSecurity</key>
